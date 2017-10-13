@@ -101,16 +101,10 @@ int main() {
 		/* parsecmd free line and set it up to 0 */
 		l = parsecmd( & line);
 
-		/* execute the parsed command */
-		execute(l);
-
 		/* If input stream closed, normal termination */
-		if (!l) {
-		  
+		if (!l) { 
 			terminate(0);
 		}
-		
-
 		
 		if (l->err) {
 			/* Syntax error, read another command */
@@ -131,6 +125,9 @@ int main() {
                         }
 			printf("\n");
 		}
+
+		/* execute the parsed command */
+		execute(l);
 	}
 
 }

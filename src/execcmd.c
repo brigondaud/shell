@@ -9,5 +9,15 @@
 
 void execute(struct cmdline *cmd)
 {
-  printf("\nCommand requested:\n%s\n", *cmd->seq[0]);
+  // TODO: create as many child proc there are prog in cmd->seq
+  int pid;
+  if ((pid = fork()) == 0) {
+    /* Child proc */
+    printf("\nIn the child proc :\n%s\n", *cmd->seq[0]);
+  }
+  int status = -1;
+  pid_t child_pid = wait(&status);
+  if (child_pid == -1) {
+    printf("Error terminating the child proc.\n");
+  }
 }

@@ -9,6 +9,9 @@
 #define __EXECCMD_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include "readcmd.h"
 
 /* Execute a command read on the standard input */
