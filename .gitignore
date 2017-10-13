@@ -1,2 +1,17 @@
 #Pdf files
 *.pdf
+build/CMakeFiles/
+
+build/CMakeCache\.txt
+
+build/CPackConfig\.cmake
+
+build/CPackSourceConfig\.cmake
+
+build/a\.out
+
+build/cmake_install\.cmake
+
+build/CTestTestfile\.cmake
+
+build/Makefile

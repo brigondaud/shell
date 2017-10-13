@@ -58,7 +58,6 @@ void terminate(char *line) {
 	exit(0);
 }
 
-
 int main() {
         printf("Variante %d: %s\n", VARIANTE, VARIANTE_STRING);
 
