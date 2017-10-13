@@ -15,3 +15,5 @@ build/cmake_install\.cmake
 build/CTestTestfile\.cmake
 
 build/Makefile
+
+build/ensishell

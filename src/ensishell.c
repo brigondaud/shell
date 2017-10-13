@@ -11,6 +11,7 @@
 
 #include "variante.h"
 #include "readcmd.h"
+#include "execcmd.h"
 
 #ifndef VARIANTE
 #error "Variante non défini !!"
@@ -99,6 +100,9 @@ int main() {
 
 		/* parsecmd free line and set it up to 0 */
 		l = parsecmd( & line);
+
+		/* execute the parsed command */
+		execute(l);
 
 		/* If input stream closed, normal termination */
 		if (!l) {
