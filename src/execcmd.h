@@ -14,7 +14,9 @@
 #include <sys/wait.h>
 #include "readcmd.h"
 
+/* Executes a pack of command */
+
 /* Execute a command read on the standard input */
-void execute(char **cmd);
+void execute(struct cmdline *cmd);
 
 #endif

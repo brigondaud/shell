@@ -7,9 +7,13 @@
 
 #include "execcmd.h"
 
-void execute(char **cmd)
+void execute(struct cmdline *line)
 {
+  if (line->seq[0] == NULL){
+    return;
+  }
   /* The command and its args */
+  char **cmd = line->seq[0];
   char *prog = cmd[0];
   char **args = cmd++;
 
@@ -18,15 +22,19 @@ void execute(char **cmd)
     case -1:
       perror("fork: ");
     break;
-    
+
     case 0: /*In child: exec the command */
       execvp(prog, args);
     break;
     
     default: /* In father: wait for child to finish */
-      if (wait(NULL)==-1){
-        perror("wait: ");
-        exit(EXIT_FAILURE);
+      if(line->bg != 1){
+        printf("Waiting for child to end\n");
+        if (wait(NULL)==-1){
+          perror("wait: ");
+          exit(EXIT_FAILURE);
+        }
       }
+    break;
   }
 }

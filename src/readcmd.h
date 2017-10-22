@@ -12,8 +12,6 @@
 #ifndef __READCMD_H
 #define __READCMD_H
 
-
-
 /* If GNU Readline is not available, internal readline will be used*/
 #include "variante.h"
 
