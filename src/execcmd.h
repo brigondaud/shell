@@ -15,6 +15,6 @@
 #include "readcmd.h"
 
 /* Execute a command read on the standard input */
-void execute(struct cmdline *cmd);
+void execute(char **cmd);
 
 #endif

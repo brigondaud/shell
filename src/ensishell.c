@@ -126,8 +126,11 @@ int main() {
 			printf("\n");
 		}
 
-		/* execute the parsed command */
-		execute(l);
+		/* execute the parsed commands */
+		for (int i = 0; l->seq[i] != 0; i++) {
+			char **cmd = l->seq[i];
+			execute(cmd);
+		}
 	}
 
 }

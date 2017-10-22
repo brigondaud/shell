@@ -7,17 +7,26 @@
 
 #include "execcmd.h"
 
-void execute(struct cmdline *cmd)
+void execute(char **cmd)
 {
-  // TODO: create as many child proc there are prog in cmd->seq
-  int pid;
-  if ((pid = fork()) == 0) {
-    /* Child proc */
-    printf("\nIn the child proc :\n%s\n", *cmd->seq[0]);
-  }
-  int status = -1;
-  pid_t child_pid = wait(&status);
-  if (child_pid == -1) {
-    printf("Error terminating the child proc.\n");
+  /* The command and its args */
+  char *prog = cmd[0];
+  char **args = cmd++;
+
+  pid_t pid = fork();
+  switch(pid) {
+    case -1:
+      perror("fork: ");
+    break;
+    
+    case 0: /*In child: exec the command */
+      execvp(prog, args);
+    break;
+    
+    default: /* In father: wait for child to finish */
+      if (wait(NULL)==-1){
+        perror("wait: ");
+        exit(EXIT_FAILURE);
+      }
   }
 }
