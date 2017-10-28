@@ -5,18 +5,4 @@
  * Ce code est distribué sous la licence GPLv3+.     *
  *****************************************************/
 
-#ifndef __EXECCMD_H
-#define __EXECCMD_H
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include "readcmd.h"
-
-/* Executes a pack of command */
-
-/* Execute a command read on the standard input */
-void execute(struct cmdline *cmd);
-
-#endif
+#include "jobs.h"
