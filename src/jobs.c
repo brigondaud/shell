@@ -6,3 +6,46 @@
  *****************************************************/
 
 #include "jobs.h"
+
+
+void jobs(void)
+{
+  struct job *current = first_job;
+  while(current){
+    char status[9];
+    switch(current->status){
+      case RUNNING:
+      strcpy(status, "RUNNING");
+      break;
+      case FINISHED:
+      strcpy(status, "FINISHED");
+      break;
+    }
+    printf("PID: %d, job: %s, status: %s\n", current->pid, current->job_name, status);
+    current = current->next;
+  }
+}
+
+void job_register(pid_t pid, char *job_name)
+{
+  /* The new job */
+  struct job *job = malloc(sizeof(struct job));
+  job->pid = pid;
+  job->job_name = malloc(sizeof(job_name));
+  strcpy(job->job_name, job_name);
+  job->status = RUNNING;
+
+  /* Registers the new job */
+  if(!first_job){
+    first_job = job;
+    last_job = job;
+  } else {
+    last_job->next = job;
+    last_job = job;
+  }
+}
+
+int change_status(pid_t pid, job_status status)
+{
+  return 0;
+}

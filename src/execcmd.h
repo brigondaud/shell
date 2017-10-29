@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "readcmd.h"
+#include "jobs.h"
 
 /* Executes a pack of command */
 

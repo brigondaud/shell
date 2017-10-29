@@ -7,27 +7,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * A status can either be running or finished
  */
 typedef enum {
   RUNNING,
-  DONE
+  FINISHED
 } job_status;
 
 /**
  * A stack of the jobs running in background
  */
-struct jobs {
+struct job {
   pid_t pid;
   char *job_name;
   job_status status;
   struct job *next;
 };
 
-struct jobs *first_job;
-struct jobs *last_job;
+struct job *first_job;
+struct job *last_job;
 
 /**
  * Jobs command: display all the jobs running in background and
@@ -44,4 +45,4 @@ void job_register(pid_t pid, char *job_name);
  * Modify the status of a job in the jobs list
  * Returns -1 if the job was not found
  */
-int change_status(struct job *job, job_status status);
+int change_status(pid_t pid, job_status status);

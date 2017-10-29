@@ -17,6 +17,13 @@ void execute(struct cmdline *line)
   char *prog = cmd[0];
   char **args = cmd++;
 
+  if(!strncmp(prog, "jobs", 4)){
+    printf("\n-----------JOBS-----------\n");
+    jobs();
+    printf("\n");
+    return;
+  }
+
   pid_t pid = fork();
   switch(pid) {
     case -1:
@@ -29,11 +36,13 @@ void execute(struct cmdline *line)
 
     default: /* In father: wait for child to finish */
       if(line->bg != 1){
-        printf("Waiting for child to end\n");
         if (wait(NULL)==-1){
           perror("wait: ");
           exit(EXIT_FAILURE);
         }
+      } else {
+        /* Register the job */
+        job_register(pid, prog);
       }
     break;
   }

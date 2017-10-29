@@ -102,7 +102,7 @@ int main() {
 		l = parsecmd( & line);
 
 		/* If input stream closed, normal termination */
-		if (!l) { 
+		if (!l) {
 			terminate(0);
 		}
 		
