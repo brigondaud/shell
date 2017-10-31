@@ -12,6 +12,10 @@ void jobs(void)
 {
   struct job *current = first_job;
   while(current){
+
+    /* First, check the status of the job */
+    check_status(current);
+
     char status[9];
     switch(current->status){
       case RUNNING:
@@ -45,36 +49,62 @@ void job_register(pid_t pid, char *job_name)
   }
 }
 
-int change_status(pid_t pid, job_status status)
-{
-  struct job *current = first_job;
-  if (!current)
-    return -1;
-  while(current != last_job || current->pid != pid) {
-    current = current->next;
-  }
-  if (current->pid != pid)
-    return -1;
+// int change_status(pid_t pid, job_status status)
+// {
+//   struct job *current = first_job;
+//   if (!current)
+//     return -1;
+//   while(current != last_job || current->pid != pid) {
+//     current = current->next;
+//   }
+//   if (current->pid != pid)
+//     return -1;
+//
+//   current->status = status;
+//   return 0;
+// }
 
-  current->status = status;
-  return 0;
+// void update_jobs(void)
+// {
+//   struct job *current = first_job;
+//   while (current) {
+//     int status;
+//     int wait = waitpid(current->pid, &status, WNOHANG);
+//     if(wait != 0) {
+//       if (wait == -1) {
+//         perror("waitpid: ");
+//       } else {
+//         int res = change_status(current->pid, FINISHED);
+//         if (res == -1) {
+//           perror("Change status failed: ");
+//         }
+//       }
+//     }
+//   }
+// }
+
+int change_status(struct job *the_job, job_status status)
+{
+    if (the_job == NULL)
+        return -1;
+
+    the_job->status = status;
+    return 0;
 }
 
-void update_jobs(void)
+void check_status(struct job *the_job)
 {
-  struct job *current = first_job;
-  while (current) {
-    int status;
-    int wait = waitpid(current->pid, &status, WNOHANG);
-    if(wait != 0) {
-      if (wait == -1) {
-        perror("waitpid: ");
-      } else {
-        int res = change_status(current->pid, FINISHED);
-        if (res == -1) {
-          perror("Change status failed: ");
+    if (the_job == NULL || the_job->status == FINISHED)
+        return;
+
+    int wait_res = waitpid(the_job->pid, NULL, WNOHANG);
+
+    if (wait_res != 0) {
+        if (wait_res == -1)
+            perror("waitpid: ");
+        else {
+            if (change_status(the_job, FINISHED) == -1)
+                perror("Change status failed: ");
         }
-      }
     }
-  }
 }

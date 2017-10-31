@@ -37,7 +37,7 @@ int question6_executer(char *line)
 
 	/* Remove this line when using parsecmd as it will free it */
 	free(line);
-	
+
 	return 0;
 }
 
@@ -75,7 +75,7 @@ int main() {
 		char *prompt = "ensishell>";
 
 		/* Looking for done jobs */
-		update_jobs();
+		// update_jobs();
 
 		/* Readline use some internal memory structure that
 		   can not be cleaned at the end of the program. Thus
@@ -108,7 +108,7 @@ int main() {
 		if (!l) {
 			terminate(0);
 		}
-		
+
 		if (l->err) {
 			/* Syntax error, read another command */
 			printf("error: %s\n", l->err);

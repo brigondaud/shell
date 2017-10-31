@@ -46,10 +46,17 @@ void job_register(pid_t pid, char *job_name);
  * Modify the status of a job in the jobs list
  * Returns -1 if the job was not found, else return 0
  */
-int change_status(pid_t pid, job_status status);
+// int change_status(pid_t pid, job_status status);
+int change_status(struct job *the_job, job_status status);
 
 
 /**
  * Goes through all the jobs and see if they are finished
  */
 void update_jobs(void);
+
+/**
+ * Check if a process is finished.
+ * If finished, update its current status via jobs.h@change_status
+ */
+void check_status(struct job *the_job);

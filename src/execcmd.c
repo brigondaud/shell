@@ -24,7 +24,9 @@ void execute(struct cmdline *line)
     return;
   }
 
+  int status;
   pid_t pid = fork();
+
   switch(pid) {
     case -1:
       perror("fork: ");
@@ -35,8 +37,9 @@ void execute(struct cmdline *line)
     break;
 
     default: /* In father: wait for child to finish */
-      if(line->bg != 1){
-        if (wait(NULL)==-1){
+      if (line->bg != 1){
+          if (waitpid(pid, &status, 0) == -1) {
+        // if (wait(NULL)==-1){
           perror("wait: ");
           exit(EXIT_FAILURE);
         }
