@@ -28,8 +28,8 @@ struct job {
   struct job *next;
 };
 
-struct job *first_job;
-struct job *last_job;
+extern struct job *first_job;
+extern struct job *last_job;
 
 /**
  * Jobs command: display all the jobs running in background and

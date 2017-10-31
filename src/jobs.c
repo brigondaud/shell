@@ -7,6 +7,8 @@
 
 #include "jobs.h"
 
+struct job *first_job = NULL;
+struct job *last_job = NULL;
 
 void jobs(void)
 {
