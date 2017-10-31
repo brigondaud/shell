@@ -12,6 +12,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "readcmd.h"
 #include "jobs.h"
 
@@ -19,5 +22,11 @@
 
 /* Execute a command read on the standard input */
 void execute(struct cmdline *cmd);
+
+/**
+ * Check the redirections.
+ * Open and close file descriptors if needed.
+ */
+void check_in_out(char *in, char *out);
 
 #endif
