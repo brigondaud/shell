@@ -74,6 +74,9 @@ int main() {
 		int i, j;
 		char *prompt = "ensishell>";
 
+		/* Looking for done jobs */
+		update_jobs();
+
 		/* Readline use some internal memory structure that
 		   can not be cleaned at the end of the program. Thus
 		   one memory leak per command seems unavoidable yet */

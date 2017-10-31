@@ -47,5 +47,34 @@ void job_register(pid_t pid, char *job_name)
 
 int change_status(pid_t pid, job_status status)
 {
+  struct job *current = first_job;
+  if (!current)
+    return -1;
+  while(current != last_job || current->pid != pid) {
+    current = current->next;
+  }
+  if (current->pid != pid)
+    return -1;
+
+  current->status = status;
   return 0;
+}
+
+void update_jobs(void)
+{
+  struct job *current = first_job;
+  while (current) {
+    int status;
+    int wait = waitpid(current->pid, &status, WNOHANG);
+    if(wait != 0) {
+      if (wait == -1) {
+        perror("waitpid: ");
+      } else {
+        int res = change_status(current->pid, FINISHED);
+        if (res == -1) {
+          perror("Change status failed: ");
+        }
+      }
+    }
+  }
 }
