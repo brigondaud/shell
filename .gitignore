@@ -17,3 +17,5 @@ build/CTestTestfile\.cmake
 build/Makefile
 
 build/ensishell
+
+CMakeLists\.txt
