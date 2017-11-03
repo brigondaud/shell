@@ -28,16 +28,10 @@
 
 int question6_executer(char *line)
 {
-	/* Question 6: Insert your code to execute the command line
-	 * identically to the standard execution scheme:
-	 * parsecmd, then fork+execvp, for a single command.
-	 * pipe and i/o redirection are not required.
-	 */
-	printf("Not implemented yet: can not execute %s\n", line);
+	int channel[2]; // Fictive channel
+	struct cmdline *cmds = parsecmd(&line);
 
-	/* Remove this line when using parsecmd as it will free it */
-	free(line);
-
+	execute_command(cmds, 0, count_commands(cmds), channel, 0);
 	return 0;
 }
 
