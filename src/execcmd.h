@@ -25,11 +25,15 @@
 void execute(struct cmdline *line);
 
 /**
- * Check the redirections.
- * Open and close file descriptors if needed.
+ * Open and close file descriptors for pipes.
  */
-void check_in_out(char *in, char *out);
 void check_in_out_desc(int in_desc, int out_desc);
+
+/**
+ * Check redirections and manage descriptors if needed.
+ * If is_input, the redirection checks the input, else the output.
+ */
+int get_redirection_desc(struct cmdline *line, int is_input);
 
 /**
  * Count commands.

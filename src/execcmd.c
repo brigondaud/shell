@@ -31,7 +31,7 @@ void execute(struct cmdline *line)
 
 	int i;
 	int channel[2];
-	int in_desc = 0; // Begin with the standard input
+	int in_desc = get_redirection_desc(line, 1);
 
 	/* check_in_out(line->in, line->out); */
 	int number_of_commands = count_commands(line);
@@ -50,7 +50,8 @@ void execute(struct cmdline *line)
 		close(channel[1]);
 	}
 
-	execute_command(line->seq[i], line->bg, in_desc, 1);
+	int out_desc = get_redirection_desc(line, 0);
+	execute_command(line->seq[i], line->bg, in_desc, out_desc);
 	close(channel[0]);
 
 	// int status;
@@ -119,38 +120,40 @@ void execute_command(char **cmd, int bg, int in_desc, int out_desc)
 
 
 // TODO. Peut-être inutilisable avec les pipes maintenant.
-void check_in_out(char *in, char *out)
-{
-	int in_code, out_code;
-
-	/* File redirection : < */
-	if (in != NULL) {
-		in_code = open(in, O_RDONLY);
-		if (in_code == -1)
-			perror("in redirection (<): ");
-
-		if (dup2(in_code, 0) == -1)
-			perror("descriptor duplication [in]: ");
-
-		close(in_code);
-	}
-
-	/* File redirection : > */
-	if (out != NULL) {
-		out_code = open(out, O_WRONLY | O_CREAT);
-		if (out_code == -1)
-			perror("out redirection (>): ");
-
-		if (dup2(out_code, 1) == -1)
-			perror("descriptor duplication [out]: ");
-
-		close(out_code);
-	}
-}
+// void check_in_out(char *in, char *out)
+// {
+// 	int in_code, out_code;
+//
+// 	/* File redirection : < */
+// 	if (in != NULL) {
+// 		in_code = open(in, O_RDONLY);
+// 		if (in_code == -1)
+// 			perror("in redirection (<): ");
+//
+// 		if (dup2(in_code, 0) == -1)
+// 			perror("descriptor duplication [in]: ");
+//
+// 		close(in_code);
+// 	}
+//
+// 	/* File redirection : > */
+// 	if (out != NULL) {
+// 		out_code = open(out, O_WRONLY | O_CREAT);
+// 		if (out_code == -1)
+// 			perror("out redirection (>): ");
+//
+// 		if (dup2(out_code, 1) == -1)
+// 			perror("descriptor duplication [out]: ");
+//
+// 		close(out_code);
+// 	}
+// }
 
 
 void check_in_out_desc(int in_desc, int out_desc)
 {
+	printf("%d %d\n", in_desc, out_desc);
+
 	/* Redirection < */
 	if (in_desc != 0) {
 		if (dup2(in_desc, 0) == -1)
@@ -165,6 +168,32 @@ void check_in_out_desc(int in_desc, int out_desc)
 			perror("descriptor duplication [out]: ");
 
 		close(out_desc);
+	}
+}
+
+
+int get_redirection_desc(struct cmdline *line, int is_input)
+{
+	int desc_code;
+
+	if (is_input) {
+		if (line == NULL || !line->in)
+			return 0;
+
+		desc_code = open(line->in, O_RDONLY);
+		if (desc_code == -1)
+			perror("in redirection (<): ");
+
+		return desc_code;
+	} else {
+		if (line == NULL || !line->out)
+			return 1;
+
+		desc_code = open(line->out, O_WRONLY | O_CREAT, 0666);
+		if (desc_code == -1)
+			perror("out redirection (>): ");
+
+		return desc_code;
 	}
 }
 
