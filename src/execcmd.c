@@ -152,7 +152,7 @@ void execute_command(char **cmd, int bg, int in_desc, int out_desc)
 
 void check_in_out_desc(int in_desc, int out_desc)
 {
-	printf("%d %d\n", in_desc, out_desc);
+	// printf("%d %d\n", in_desc, out_desc);
 
 	/* Redirection < */
 	if (in_desc != 0) {
