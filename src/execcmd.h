@@ -19,7 +19,6 @@
 #include "readcmd.h"
 #include "jobs.h"
 
-/* Executes a pack of command */
 
 /* Execute a command read on the standard input */
 void execute(struct cmdline *line);
@@ -44,6 +43,7 @@ int count_commands(struct cmdline *line);
 /**
  * Execute a single command and manage input-output.
  */
-void execute_command(char **cmd, int bg, int in_desc, int out_desc);
+void execute_command(struct cmdline *, int, const int, int *, int);
+
 
 #endif
