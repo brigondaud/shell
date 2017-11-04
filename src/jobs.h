@@ -5,6 +5,9 @@
  * Ce code est distribué sous la licence GPLv3+.     *
  *****************************************************/
 
+ #ifndef __JOBS_H
+ #define __JOBS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -60,3 +63,6 @@ void update_jobs(void);
  * If finished, update its current status via jobs.h@change_status
  */
 void check_status(struct job *the_job);
+
+
+#endif

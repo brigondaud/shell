@@ -12,6 +12,7 @@
 #include "variante.h"
 #include "readcmd.h"
 #include "execcmd.h"
+#include "joker.h"
 
 #ifndef VARIANTE
 #error "Variante non défini !!"
@@ -65,11 +66,8 @@ int main() {
 	while (1) {
 		struct cmdline *l;
 		char *line=0;
-		int i, j;
+		// int i, j;
 		char *prompt = "ensishell>";
-
-		/* Looking for done jobs */
-		// update_jobs();
 
 		/* Readline use some internal memory structure that
 		   can not be cleaned at the end of the program. Thus
@@ -113,15 +111,18 @@ int main() {
 		if (l->out) printf("out: %s\n", l->out);
 		if (l->bg) printf("background (&)\n");
 
+		/* Replace jokers before execution! */
+		expand_commands(l);
+
 		/* Display each command of the pipe */
-		for (i=0; l->seq[i]!=0; i++) {
-			char **cmd = l->seq[i];
-			printf("seq[%d]: ", i);
-                        for (j=0; cmd[j]!=0; j++) {
-                                printf("'%s' ", cmd[j]);
-                        }
-			printf("\n");
-		}
+		// for (i=0; l->seq[i]!=0; i++) {
+		// 	char **cmd = l->seq[i];
+		// 	printf("seq[%d]: ", i);
+        //                 for (j=0; cmd[j]!=0; j++) {
+        //                         printf("'%s' ", cmd[j]);
+        //                 }
+		// 	printf("\n");
+		// }
 
 		/* execute the parsed commands */
 		execute(l);
