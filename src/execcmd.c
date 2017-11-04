@@ -65,7 +65,11 @@ void execute_command(struct cmdline *line, int i, const int noc, int *channel, i
 			check_in_out_desc(in_desc, out_desc);
 
 			/* In child, execute the command. */
-			execvp(prog, args);
+			if (execvp(prog, args) == -1) {
+				perror("");
+				exit(EXIT_FAILURE);
+			}
+
 			break;
 
 		default:
