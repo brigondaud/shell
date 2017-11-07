@@ -46,6 +46,12 @@ void jobs(void);
 void job_register(pid_t pid, char *job_name);
 
 /**
+ * Remove of a job from the list of jobs
+ * returns 1 if the job must me freed
+ */
+int remove_job(struct job *job);
+
+/**
  * Modify the status of a job in the jobs list
  * Returns -1 if the job was not found, else return 0
  */
@@ -61,8 +67,9 @@ void update_jobs(void);
 /**
  * Check if a process is finished.
  * If finished, update its current status via jobs.h@change_status
+ * returns 1 if the job must be freed
  */
-void check_status(struct job *the_job);
+int check_status(struct job *the_job);
 
 
 #endif
