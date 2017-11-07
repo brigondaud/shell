@@ -15,27 +15,22 @@ void jobs(void)
 {
   struct job *current = first_job;
 
-    /* First, check the status of the jobs */
+    /* First, check the status of the jobs. */
     while (current){
         check_status(current);
         current = current->next;
     }
+
+    /* Secondly, remove jobs that are finished. */
+    remove_finished_jobs();
+
     /* Display the status of the remaining jobs */
     current = first_job;
-  while(current){
 
-    char status[9];
-    switch(current->status){
-      case RUNNING:
-      strcpy(status, "RUNNING");
-      break;
-      case FINISHED:
-      strcpy(status, "FINISHED");
-      break;
+    while (current) {
+        printf("PID: %d, job: %s, status: %s\n", current->pid, current->job_name, "RUNNING");
+        current = current->next;
     }
-    printf("PID: %d, job: %s, status: %s\n", current->pid, current->job_name, status);
-    current = current->next;
-  }
 }
 
 
@@ -68,51 +63,79 @@ int change_status(struct job *the_job, job_status status)
     return 0;
 }
 
-int remove_job(struct job *job)
-{
-    /* If no job */
-    if (!first_job){
-        return 0;
-    }
-    struct job *current  = first_job;
-    struct job *prec = current;
-    while (current != last_job || current != job) {
-        prec = current;
-        current = current->next;
-    }
-    /* If the job was not found */
-    if (current != job) {
-        return 0;
-    }
 
-    if (last_job == first_job) {
-        first_job = NULL;
-        last_job = NULL;
-        return 1;
-    }
-
-    if (current == first_job) { /* If first job */
-        first_job = current->next;
-    } else if (current == last_job) { /* If last job */
-        last_job = prec;
-    } else {
-        prec->next = current->next;
-    }
-    return 1;
-}
-
-
-int check_status(struct job *the_job)
+void check_status(struct job *the_job)
 {
     if (the_job == NULL || the_job->status == FINISHED)
-        return 0;
+        return;
 
     int wait_res = waitpid(the_job->pid, NULL, WNOHANG);
 
     if (wait_res != 0) {
         if (wait_res == -1)
             perror("waitpid: ");
-        return remove_job(the_job);
+        else {
+            if (change_status(the_job, FINISHED) == -1)
+                perror("Change status failed: ");
+        }
     }
-    return 0;
+}
+
+
+void remove_finished_jobs(void)
+{
+    // CASE 1. No jobs running or finished.
+    if (first_job == NULL) return;
+
+    // CASE 2. Only one job in the list.
+    if (first_job == last_job && first_job->status == FINISHED) {
+        free(first_job);
+
+        first_job = NULL;
+        last_job = NULL;
+        return;
+    }
+
+    // CASE 3. More than one job in the list.
+    struct job *begin_sentinel = malloc(sizeof (struct job));
+    struct job *end_sentinel = malloc(sizeof (struct job));
+
+    begin_sentinel->status = SENTINEL; begin_sentinel->next = first_job;
+    end_sentinel->status = SENTINEL; end_sentinel->next = NULL;
+    last_job->next = end_sentinel;
+
+    // Finished jobs are going to be deleted :)
+    struct job *previous = begin_sentinel;
+    struct job *the_job = first_job;
+
+    while (the_job && the_job->status != SENTINEL) {
+
+        /* This job should be deleted now. */
+        if (the_job->status == FINISHED) {
+            previous->next = the_job->next;
+
+            if (the_job == last_job)
+                last_job = previous;
+
+            free(the_job);
+            the_job = previous->next;
+
+        /* Just iterate on the list... */
+        } else {
+            previous = the_job;
+            the_job = the_job->next;
+        }
+    }
+
+    first_job = begin_sentinel->next;
+    last_job->next = NULL;
+
+    // If serveral jobs were deleted in one call...
+    if (last_job == begin_sentinel) {
+        first_job = NULL;
+        last_job = NULL;
+    }
+
+    free(begin_sentinel);
+    free(end_sentinel);
 }

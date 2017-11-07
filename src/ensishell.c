@@ -107,9 +107,9 @@ int main() {
 			continue;
 		}
 
-		if (l->in) printf("in: %s\n", l->in);
-		if (l->out) printf("out: %s\n", l->out);
-		if (l->bg) printf("background (&)\n");
+		// if (l->in) printf("in: %s\n", l->in);
+		// if (l->out) printf("out: %s\n", l->out);
+		// if (l->bg) printf("background (&)\n");
 
 		/* Replace jokers before execution! */
 		expand_commands(l);

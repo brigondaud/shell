@@ -18,7 +18,8 @@
  */
 typedef enum {
   RUNNING,
-  FINISHED
+  FINISHED,
+  SENTINEL
 } job_status;
 
 /**
@@ -55,7 +56,6 @@ int remove_job(struct job *job);
  * Modify the status of a job in the jobs list
  * Returns -1 if the job was not found, else return 0
  */
-// int change_status(pid_t pid, job_status status);
 int change_status(struct job *the_job, job_status status);
 
 
@@ -67,9 +67,13 @@ void update_jobs(void);
 /**
  * Check if a process is finished.
  * If finished, update its current status via jobs.h@change_status
- * returns 1 if the job must be freed
  */
-int check_status(struct job *the_job);
+void check_status(struct job *the_job);
+
+/**
+ * Remove all finished jobs from the jobs list
+ */
+void remove_finished_jobs(void);
 
 
 #endif
