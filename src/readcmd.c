@@ -21,19 +21,19 @@ static void memory_error(void)
 	exit(1);
 }
 
-
 static void *xmalloc(size_t size)
 {
 	void *p = malloc(size);
-	if (!p) memory_error();
+	if (!p)
+		memory_error();
 	return p;
 }
-
 
 static void *xrealloc(void *ptr, size_t size)
 {
 	void *p = realloc(ptr, size);
-	if (!p) memory_error();
+	if (!p)
+		memory_error();
 	return p;
 }
 
@@ -52,15 +52,17 @@ char *readline(char *prompt)
 
 	do {
 		size_t l = strlen(buf);
-		if ((l > 0) && (buf[l-1] == '\n')) {
+		if ((l > 0) && (buf[l - 1] == '\n')) {
 			l--;
 			buf[l] = 0;
 			return buf;
 		}
-		if (buf_len >= (INT_MAX / 2)) memory_error();
+		if (buf_len >= (INT_MAX / 2))
+			memory_error();
 		buf_len *= 2;
 		buf = xrealloc(buf, buf_len * sizeof(char));
-		if (fgets(buf + l, buf_len - l, stdin) == NULL) return buf;
+		if (fgets(buf + l, buf_len - l, stdin) == NULL)
+			return buf;
 	} while (1);
 }
 #endif
@@ -68,39 +70,18 @@ char *readline(char *prompt)
 #define READ_CHAR *(*cur_buf)++ = *(*cur)++
 #define SKIP_CHAR (*cur)++
 
-static void read_single_quote(char ** cur, char ** cur_buf) {
+static void read_single_quote(char **cur, char **cur_buf)
+{
 	SKIP_CHAR;
-	while(1) {
+	while (1) {
 		char c = **cur;
-		switch(c) {
-                case '\'':
-                        SKIP_CHAR;
-                        return;
-                case '\0':
-                        fprintf(stderr, "Missing closing '\n");
-                        return;
-                default:
-                        READ_CHAR;
-                        break;
-                }
-	}
-}
-
-static void read_double_quote(char ** cur, char ** cur_buf) {
-	SKIP_CHAR;
-	while(1) {
-		char c = **cur;
-		switch(c) {
-		case '"':
+		switch (c) {
+		case '\'':
 			SKIP_CHAR;
 			return;
-		case '\\':
-			SKIP_CHAR;
-			READ_CHAR;
-			break;
-                case '\0':
-                        fprintf(stderr, "Missing closing \"\n");
-                        return;
+		case '\0':
+			fprintf(stderr, "Missing closing '\n");
+			return;
 		default:
 			READ_CHAR;
 			break;
@@ -108,8 +89,32 @@ static void read_double_quote(char ** cur, char ** cur_buf) {
 	}
 }
 
-static void read_word(char ** cur, char ** cur_buf) {
-	while(1) {
+static void read_double_quote(char **cur, char **cur_buf)
+{
+	SKIP_CHAR;
+	while (1) {
+		char c = **cur;
+		switch (c) {
+		case '"':
+			SKIP_CHAR;
+			return;
+		case '\\':
+			SKIP_CHAR;
+			READ_CHAR;
+			break;
+		case '\0':
+			fprintf(stderr, "Missing closing \"\n");
+			return;
+		default:
+			READ_CHAR;
+			break;
+		}
+	}
+}
+
+static void read_word(char **cur, char **cur_buf)
+{
+	while (1) {
 		char c = **cur;
 		switch (c) {
 		case '\0':
@@ -156,7 +161,7 @@ static char **split_in_words(char *line)
 			cur++;
 			break;
 		case '&':
-		        w = "&";
+			w = "&";
 			cur++;
 			break;
 		case '<':
@@ -188,29 +193,30 @@ static char **split_in_words(char *line)
 	return tab;
 }
 
-
 static void freeseq(char ***seq)
 {
 	int i, j;
 
-	for (i=0; seq[i]!=0; i++) {
+	for (i = 0; seq[i] != 0; i++) {
 		char **cmd = seq[i];
 
-		for (j=0; cmd[j]!=0; j++) free(cmd[j]);
+		for (j = 0; cmd[j] != 0; j++)
+			free(cmd[j]);
 		free(cmd);
 	}
 	free(seq);
 }
 
-
 /* Free the fields of the structure but not the structure itself */
 static void freecmd(struct cmdline *s)
 {
-	if (s->in) free(s->in);
-	if (s->out) free(s->out);
-	if (s->seq) freeseq(s->seq);
+	if (s->in)
+		free(s->in);
+	if (s->out)
+		free(s->out);
+	if (s->seq)
+		freeseq(s->seq);
 }
-
 
 struct cmdline *parsecmd(char **pline)
 {
@@ -263,7 +269,8 @@ struct cmdline *parsecmd(char **pline)
 				goto error;
 			}
 			if (words[i] == 0) {
-				s->err = "filename missing for input redirection";
+				s->err =
+				    "filename missing for input redirection";
 				goto error;
 			}
 			s->in = words[i++];
@@ -275,7 +282,8 @@ struct cmdline *parsecmd(char **pline)
 				goto error;
 			}
 			if (words[i] == 0) {
-				s->err = "filename missing for output redirection";
+				s->err =
+				    "filename missing for output redirection";
 				goto error;
 			}
 			s->out = words[i++];
@@ -327,7 +335,7 @@ struct cmdline *parsecmd(char **pline)
 	free(words);
 	s->seq = seq;
 	return s;
-error:
+ error:
 	while ((w = words[i++]) != 0) {
 		switch (w[0]) {
 		case '<':
@@ -340,7 +348,8 @@ error:
 	}
 	free(words);
 	freeseq(seq);
-	for (i=0; cmd[i]!=0; i++) free(cmd[i]);
+	for (i = 0; cmd[i] != 0; i++)
+		free(cmd[i]);
 	free(cmd);
 	if (s->in) {
 		free(s->in);

@@ -5,8 +5,8 @@
  * Ce code est distribué sous la licence GPLv3+.     *
  *****************************************************/
 
- #ifndef __JOBS_H
- #define __JOBS_H
+#ifndef __JOBS_H
+#define __JOBS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,19 +17,19 @@
  * A status can either be running or finished
  */
 typedef enum {
-  RUNNING,
-  FINISHED,
-  SENTINEL
+	RUNNING,
+	FINISHED,
+	SENTINEL
 } job_status;
 
 /**
  * A stack of the jobs running in background
  */
 struct job {
-  pid_t pid;
-  char *job_name;
-  job_status status;
-  struct job *next;
+	pid_t pid;
+	char *job_name;
+	job_status status;
+	struct job *next;
 };
 
 extern struct job *first_job;
@@ -58,7 +58,6 @@ int remove_job(struct job *job);
  */
 int change_status(struct job *the_job, job_status status);
 
-
 /**
  * Goes through all the jobs and see if they are finished
  */
@@ -74,6 +73,5 @@ void check_status(struct job *the_job);
  * Remove all finished jobs from the jobs list
  */
 void remove_finished_jobs(void);
-
 
 #endif
