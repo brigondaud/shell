@@ -17,7 +17,7 @@ void execute(struct cmdline *line)
 	char **cmd = line->seq[0];
 	char *prog = cmd[0];
 
-	if(!strncmp(prog, "jobs", 4)){
+	if(strlen(prog) == 4 && !strncmp(prog, "jobs", 4)){
 		printf("\n----------- JOBS -----------\n");
 		jobs();
 		printf("\n");
