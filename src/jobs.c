@@ -37,9 +37,9 @@ void jobs(void)
 void job_register(pid_t pid, char *job_name)
 {
   /* The new job */
-  struct job *job = malloc(sizeof(struct job));
+  struct job *job = calloc(1, sizeof(struct job));
   job->pid = pid;
-  job->job_name = malloc(sizeof(job_name));
+  job->job_name = malloc(strlen(job_name) + 1);
   strcpy(job->job_name, job_name);
   job->status = RUNNING;
 
